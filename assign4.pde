@@ -5,9 +5,10 @@ PImage hpImage, fighterImage, enemyImage, treasureImage;
 PImage start1Image, start2Image, bg1Image, bg2Image, end1Image, end2Image;
 
 //position var
-int x_fighter, y_fighter, x_hpRect,x_treasure, y_treasure, y_enemy, x_bg1, x_bg2;
+int x_fighter, y_fighter, x_hpRect,x_treasure, y_treasure, x_bg1, x_bg2;
 int numEnemy = 5;
 int [] x_enemy = new int [numEnemy];
+int [] y_enemy = new int [numEnemy];
 
 //pressed
 boolean upPressed = false;
@@ -63,7 +64,7 @@ void setup () {
   for (int i = 0; i <numEnemy; i++){
     x_enemy[i] = - (i+1) * spacingX;
   }
-  y_enemy = floor(random(35,417));
+  y_enemy[0] = floor(random(35,417));
   rectMode(CORNERS);
   x_bg1 = 0;
   
@@ -102,30 +103,31 @@ void draw() {
       switch(array % 3){
         case ARRAY_1:
           for (int i = 0; i < numEnemy; i++){
-            image(enemyImage, x_enemy[i], y_enemy);
+            y_enemy[i] = y_enemy[0];
+            image(enemyImage, x_enemy[i], y_enemy[i]);
           }
         break;
         case ARRAY_2:
-          if( y_enemy + 5 * spacingY >= height) {
-            y_enemy = floor(random(35,height - 5 * spacingY));
+          if( y_enemy[4] >= height) {
+            y_enemy[0] = floor(random(35,height - 5 * spacingY));
           }
           for (int i = 0; i < numEnemy; i++){
-            y = i * spacingY;
-            image(enemyImage,x_enemy[i], y_enemy + y);
+            y_enemy[i] = y_enemy[0] + i * spacingY;
+            image(enemyImage,x_enemy[i], y_enemy[i]);
           }
         break;
         case ARRAY_3:
-          if( y_enemy + 3 * spacingY >= height || y_enemy - 2 * spacingY <= 35) {
-            y_enemy = floor(random(35 + 2 * spacingY,height - 3 * spacingY));
+          if( y_enemy[2] + spacingY >= height || y_enemy[2] - 2 * spacingY <= 35) {
+            y_enemy[0] = floor(random(35 + 2 * spacingY,height - 3 * spacingY));
           }
           for (int i = 0; i < numEnemy; i++){
             if(i > 2){
-              y = -(i-4) * spacingY;
+              y_enemy[i] = y_enemy[0] -(i-4) * spacingY;
             } else{
-            y = i * spacingY;
+            y_enemy[i] = y_enemy[0] + i * spacingY;
             }
-            image(enemyImage,x_enemy[i], y_enemy + y);
-            image(enemyImage,x_enemy[i], y_enemy - y);
+            image(enemyImage,x_enemy[i], y_enemy[i]);
+            image(enemyImage,x_enemy[i], y_enemy[i]);
           }
         
       }
@@ -135,7 +137,7 @@ void draw() {
           for (int j = 0; j <numEnemy; j++){
             x_enemy[j] = - (j+1) * spacingX;
           }
-        y_enemy = floor(random(35,417));
+        y_enemy[0] = floor(random(35,417));
         array++;          
         }
       }
@@ -182,8 +184,8 @@ void draw() {
       //crush 
       for (int i = 0; i <numEnemy; i++){
         if(x_fighter <= x_enemy[i] + width_enemy && x_fighter +width_fighter >= x_enemy[i]) {
-          if(y_fighter + height_fighter/2 >= y_enemy && y_fighter + height_fighter/2 <= y_enemy + height_enemy) {
-            y_enemy = floor(random(35,417));
+          if(y_fighter + height_fighter/2 >= y_enemy[i] && y_fighter + height_fighter/2 <= y_enemy[i] + height_enemy) {
+            //y_enemy = floor(random(35,417));
             if(x_hpRect > 6) {
               x_hpRect -= 40;
             }
